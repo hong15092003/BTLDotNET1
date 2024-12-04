@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class ChiTietSanPham
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string IdSanPham { get; set; } = null!;
+    public string IdSanPham { get; set; }
 
-    public string IdMauSac { get; set; } = null!;
+    public string IdMauSac { get; set; }
 
-    public string IdHang { get; set; } = null!;
+    public string IdCtspKhuyenMai { get; set; }
 
-    public string IdCtspKhuyenMai { get; set; } = null!;
-
-    public string IdPhuKien { get; set; } = null!;
+    public string IdPhuKien { get; set; }
 
     public double? BoNhoTrong { get; set; }
 
     public double? Ram { get; set; }
 
-    public string? MoTa { get; set; }
+    public string MoTa { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -29,15 +24,19 @@ public partial class ChiTietSanPham
 
     public bool? StatusDeleted { get; set; }
 
+    public decimal? Gia { get; set; }
+
+    public int? SoLuong { get; set; }
+
     public virtual ICollection<HoaDonChiTiet> HoaDonChiTiets { get; set; } = new List<HoaDonChiTiet>();
 
-    public virtual CtspKhuyenMai IdCtspKhuyenMaiNavigation { get; set; } = null!;
+    public virtual CtspKhuyenMai IdCtspKhuyenMaiNavigation { get; set; }
 
-    public virtual MauSac IdMauSacNavigation { get; set; } = null!;
+    public virtual MauSac IdMauSacNavigation { get; set; }
 
-    public virtual PhuKien IdPhuKienNavigation { get; set; } = null!;
+    public virtual PhuKien IdPhuKienNavigation { get; set; }
 
-    public virtual SanPham IdSanPhamNavigation { get; set; } = null!;
+    public virtual SanPham IdSanPhamNavigation { get; set; }
 
     public virtual ICollection<Imei> Imeis { get; set; } = new List<Imei>();
 }

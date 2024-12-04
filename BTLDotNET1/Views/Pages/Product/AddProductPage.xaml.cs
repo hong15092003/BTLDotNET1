@@ -1,5 +1,4 @@
-﻿using BTLDotNET1.ViewModels.Pages;
-using BTLDotNET1.ViewModels.Pages.Product;
+﻿using BTLDotNET1.ViewModels.Pages.Product;
 using Wpf.Ui.Controls;
 
 namespace BTLDotNET1.Views.Pages.Product
@@ -11,9 +10,10 @@ namespace BTLDotNET1.Views.Pages.Product
         public AddProductPage(AddProductViewModel viewModel)
         {
             ViewModel = viewModel;
-            DataContext = this;
-
+            DataContext = viewModel;
             InitializeComponent();
         }
+
+
     }
 }

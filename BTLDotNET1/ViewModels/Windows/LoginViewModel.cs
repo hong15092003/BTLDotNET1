@@ -1,121 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+﻿using Wpf.Ui;
 using Wpf.Ui.Controls;
-using BTLDotNET1.Models;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace BTLDotNET1.ViewModels.Windows
 {
-    public partial class LoginViewModel : INotifyPropertyChanged
+    public partial class LoginViewModel : ViewModel
     {
-        private string _username;
-        private string _password;
-        private string _loginMessage;
-        private bool _isLoginSuccess;
 
-        public string Username
+        #region Variables
+        [ObservableProperty]
+        private string username;
+        [ObservableProperty]
+        private string password;
+        [ObservableProperty]
+        private string loginMessage;
+
+        public IPageService PageService;
+        public INavigationService NavigationService;
+        public Window LoginView;
+
+
+
+        #endregion
+
+        private void OpenMessageBox(string title, string content, string buttonContent)
         {
-            get => _username;
-            set
+            var uiMessageBox = new Wpf.Ui.Controls.MessageBox
             {
-                _username = value;
-                OnPropertyChanged();
-            }
+                Title = title,
+                Content = content,
+                CloseButtonAppearance = ControlAppearance.Primary,
+                CloseButtonText = buttonContent,
+
+            };
+
+            uiMessageBox.ShowDialogAsync();
         }
 
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public string LoginMessage
-        {
-            get => _loginMessage;
-            set
-            {
-                _loginMessage = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public bool IsLoginSuccess { 
-            get => _isLoginSuccess;
-            private set 
-            {
-                _isLoginSuccess = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand LoginCommand { get; }
-
-        public LoginViewModel()
-        {
-            LoginCommand = new RelayCommand(Login);
-        }
-
+        [RelayCommand]
         public void Login()
         {
-            using (var context = new QlsbdtContext())
-            {
-                var CheckUser = context.NhanViens.Where(u => u.MaNv == Username).FirstOrDefault();
-                if (CheckUser == null)
-                {
-                    LoginMessage = ("Mã của bạn không tồn tại. Vui lòng kiểm tra lại!");
-                    IsLoginSuccess = false;
-                }
-                else if (CheckUser.MatKhau != Password)
-                {
-                    LoginMessage = ("Mật khẩu không đúng. Vui lòng kiểm tra lại!");
-                    IsLoginSuccess = false;
-                }
-                else
-                {
-                    LoginMessage = "Đăng nhập thành công!";
-                    IsLoginSuccess = true;
-                }
-              
-            }
+
+            //var mainWindowViewModel = new MainWindowViewModel();
+            //var mainWindow = new MainWindow(mainWindowViewModel, PageService, NavigationService);
+            //mainWindow.ShowWindow();
+            //LoginView.Hide();
+
+
+            //using (var context = new QLSBDTContext())
+            //{
+            //    var CheckUser = context.NhanViens.Where(u => u.MaNv == Username).FirstOrDefault();
+            //    if (CheckUser == null)
+            //    {
+            //        LoginMessage = ("Mã của bạn không tồn tại. Vui lòng kiểm tra lại!");
+            //        OpenMessageBox("Lỗi", LoginMessage, "Thử lại");
+            //    }
+            //    else if (CheckUser.MatKhau != Password)
+            //    {
+            //        LoginMessage = ("Mật khẩu không đúng. Vui lòng kiểm tra lại!");
+            //        OpenMessageBox("Lỗi", LoginMessage, "Thử lại");
+
+            //    }
+            //    else
+            //    {
+            //        LoginMessage = "Đăng nhập thành công!";
+            //        // Đăng nhập thành công, chuyển hướng đến trang chính
+            //        var mainWindowViewModel = new MainWindowViewModel();
+            //        var mainWindow = new MainWindow(mainWindowViewModel, _pageService, _navigationService);
+            //        mainWindow.ShowWindow();
+            //        LoginView.Hide();
+
+            //    }
+
+            //}
+
+
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public class RelayCommand : ICommand
-    {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
-
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter) => _canExecute == null || _canExecute();
-
-        public void Execute(object parameter) => _execute();
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
     }
 }

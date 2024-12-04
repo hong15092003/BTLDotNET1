@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class ChiTietDiaChi
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string IdTinhTp { get; set; } = null!;
+    public string IdTinhTp { get; set; }
 
-    public string IdHuyenQuan { get; set; } = null!;
+    public string IdHuyenQuan { get; set; }
 
-    public string IdXaPhuong { get; set; } = null!;
+    public string IdXaPhuong { get; set; }
 
-    public string? MoTa { get; set; }
+    public string MoTa { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -21,11 +18,11 @@ public partial class ChiTietDiaChi
 
     public bool? StatusDeleted { get; set; }
 
-    public virtual HuyenQuan IdHuyenQuanNavigation { get; set; } = null!;
+    public virtual HuyenQuan IdHuyenQuanNavigation { get; set; }
 
-    public virtual TinhTp IdTinhTpNavigation { get; set; } = null!;
+    public virtual TinhTp IdTinhTpNavigation { get; set; }
 
-    public virtual XaPhuong IdXaPhuongNavigation { get; set; } = null!;
+    public virtual XaPhuong IdXaPhuongNavigation { get; set; }
 
     public virtual ICollection<KhachHang> KhachHangs { get; set; } = new List<KhachHang>();
 

@@ -12,20 +12,32 @@ namespace BTLDotNET1.Views.Windows
         public MainWindow(
             MainWindowViewModel viewModel,
             IPageService pageService,
-            INavigationService navigationService 
+            INavigationService navigationService,
+            ISnackbarService snackbarService,
+            IContentDialogService contentDialogService
         )
         {
-            this.WindowState = WindowState.Maximized;
-            this.WindowStyle = WindowStyle.None;
+            InitializeComponent();
+
             ViewModel = viewModel;
             DataContext = this;
 
+            WindowState = WindowState.Maximized;
+            WindowStyle = WindowStyle.None;
+
             SystemThemeWatcher.Watch(this);
 
-            InitializeComponent();
             SetPageService(pageService);
+            contentDialogService.SetDialogHost(RootContentDialog);
+            snackbarService.SetSnackbarPresenter(SnackbarPresenter);
             navigationService.SetNavigationControl(RootNavigation);
         }
+
+        public void SelectNavigationItem(NavigationViewItem item)
+        {
+            RootContentDialog.Content = item;
+        }
+
 
         #region INavigationWindow methods
 

@@ -1,0 +1,144 @@
+﻿<Page
+    x:Class="BTLDotNET1.Views.Pages.Customer.CustomerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customer="clr-namespace:BTLDotNET1.ViewModels.Pages.Customer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BTLDotNET1.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:BTLDotNET1.Models"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="CustomerPage"
+    d:DataContext="{d:DesignInstance customer:CustomerViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    ScrollViewer.CanContentScroll="True"
+    mc:Ignorable="d">
+
+    <Grid Margin="0,0,0,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Header Section  -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <ui:Button
+                    Margin="0,0,10,0"
+                    Command="{Binding RefreshCommand}"
+                    Content="Làm mới" />
+                <ui:Button Margin="0,0,10,0" Content="Nhập từ Excel" />
+                <ui:Button Margin="0,0,10,0" Content="Xuất ra Excel" />
+            </StackPanel>
+            <ui:AutoSuggestBox
+                Grid.Column="1"
+                Width="300"
+                MinWidth="300"
+                Margin="71,0,0,0"
+                HorizontalAlignment="Right"
+                DisplayMemberPath="HoTen"
+                OriginalItemsSource="{Binding CustomersList, Mode=OneWay}"
+                PlaceholderText="Tìm kiếm khách hàng..."
+                Text="{Binding HoTen, Mode=TwoWay}" />
+        </Grid>
+
+        <!--  Column Headers  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <CheckBox
+                Grid.Column="0"
+                Margin="0"
+                VerticalAlignment="Center" />
+            <ui:TextBlock
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="Mã Khách Hàng" />
+            <ui:TextBlock
+                Grid.Column="2"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="Họ Tên" />
+            <ui:TextBlock
+                Grid.Column="3"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="Email" />
+            <ui:TextBlock
+                Grid.Column="4"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="SĐT" />
+        </Grid>
+
+        <!--  Customer List  -->
+        <ui:ListView
+            Grid.Row="2"
+            Margin="0,5,0,0"
+            Padding="0"
+            ItemsSource="{Binding CustomersList}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:KhachHang}">
+                    <Grid Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox
+                            Grid.Column="0"
+                            Margin="0"
+                            VerticalAlignment="Center" />
+                        <ui:TextBlock
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding MaKh}" />
+                        <ui:TextBlock
+                            Grid.Column="2"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding HoTen}" />
+                        <ui:TextBlock
+                            Grid.Column="3"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Email}" />
+                        <ui:TextBlock
+                            Grid.Column="4"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Sdt}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ui:ListView>
+
+        <ContentPresenter
+            x:Name="RootContentDialogPresenter"
+            Grid.Row="2"
+            Grid.RowSpan="1" />
+    </Grid>
+</Page>

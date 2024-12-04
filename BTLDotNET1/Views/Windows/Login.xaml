@@ -30,7 +30,7 @@
             <ui:SymbolIcon Symbol="ShoppingBag24" FontSize="200"/>
             <ui:TextBox Name="Username" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Tên đăng nhập" Margin="0 100 0 20"/>
             <ui:PasswordBox Name="Password" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Mật khẩu"/>
-            <ui:Button HorizontalAlignment="Center" Margin="0 40 0 0" Appearance="Primary" Content="Đăng Nhập" Icon="Fluent24" Command="{Binding LoginCommand}" Click="OnLoginButtonClick"/>
+            <ui:Button HorizontalAlignment="Center" Margin="0 40 0 0" Appearance="Primary" Content="Đăng Nhập" Icon="Fluent24" Command="{Binding LoginCommand}"/>
             
         </StackPanel>
 

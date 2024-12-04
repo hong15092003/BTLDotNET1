@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class Hang
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string Ma { get; set; } = null!;
+    public string Ma { get; set; }
 
-    public string? Ten { get; set; }
+    public string Ten { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 

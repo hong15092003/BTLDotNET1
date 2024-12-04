@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class SanPham
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string Ma { get; set; } = null!;
+    public string Ma { get; set; }
 
-    public string? Ten { get; set; }
+    public string Ten { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -17,9 +14,9 @@ public partial class SanPham
 
     public bool? StatusDeleted { get; set; }
 
-    public string IdSanPham { get; set; } = null!;
+    public string IdHang { get; set; }
 
     public virtual ICollection<ChiTietSanPham> ChiTietSanPhams { get; set; } = new List<ChiTietSanPham>();
 
-    public virtual Hang IdSanPhamNavigation { get; set; } = null!;
+    public virtual Hang IdHangNavigation { get; set; }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class BaoHanh
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
     public int ThoiGianBaoHanh { get; set; }
 
@@ -19,7 +16,7 @@ public partial class BaoHanh
 
     public bool? StatusDeleted { get; set; }
 
-    public string? IdImei { get; set; }
+    public string IdImei { get; set; }
 
-    public virtual Imei? IdImeiNavigation { get; set; }
+    public virtual Imei IdImeiNavigation { get; set; }
 }

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class KhuyenMai
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string Ma { get; set; } = null!;
+    public string Ma { get; set; }
 
-    public string? TenLoaiKm { get; set; }
+    public string TenLoaiKm { get; set; }
 
     public DateOnly? NgayBatDau { get; set; }
 
@@ -23,5 +20,5 @@ public partial class KhuyenMai
 
     public bool? StatusDeleted { get; set; }
 
-    public virtual CtspKhuyenMai MaNavigation { get; set; } = null!;
+    public virtual ICollection<CtspKhuyenMai> CtspKhuyenMais { get; set; } = new List<CtspKhuyenMai>();
 }

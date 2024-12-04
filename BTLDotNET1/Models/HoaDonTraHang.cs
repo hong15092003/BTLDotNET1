@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class HoaDonTraHang
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string Ma { get; set; } = null!;
+    public string Ma { get; set; }
 
-    public string IdChiTietHoaDon { get; set; } = null!;
+    public string IdChiTietHoaDon { get; set; }
 
-    public string IdNv { get; set; } = null!;
+    public string IdNv { get; set; }
 
-    public string IdKh { get; set; } = null!;
+    public string IdKh { get; set; }
 
-    public string? GhiChu { get; set; }
+    public string GhiChu { get; set; }
 
     public DateOnly? NgayTra { get; set; }
 
-    public string? TienHoanTraKhach { get; set; }
+    public string TienHoanTraKhach { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -29,9 +26,9 @@ public partial class HoaDonTraHang
 
     public virtual ICollection<HoaDonTraHangChiTiet> HoaDonTraHangChiTiets { get; set; } = new List<HoaDonTraHangChiTiet>();
 
-    public virtual HoaDonChiTiet IdChiTietHoaDonNavigation { get; set; } = null!;
+    public virtual HoaDonChiTiet IdChiTietHoaDonNavigation { get; set; }
 
-    public virtual KhachHang IdKhNavigation { get; set; } = null!;
+    public virtual KhachHang IdKhNavigation { get; set; }
 
-    public virtual NhanVien IdNvNavigation { get; set; } = null!;
+    public virtual NhanVien IdNvNavigation { get; set; }
 }

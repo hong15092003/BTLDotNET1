@@ -6,75 +6,408 @@
     xmlns:local="clr-namespace:BTLDotNET1.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:BTLDotNET1.Models"
+    xmlns:product="clr-namespace:BTLDotNET1.ViewModels.Pages.Product"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="DataPage"
-    d:DataContext="{d:DesignInstance local:DataPage,
+    Title="AddProductPage"
+    d:DataContext="{d:DesignInstance product:AddProductViewModel,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="800"
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
-
-    <Grid>
-        <ui:ContentDialog >
-            <Grid Width="600">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+    <Grid Margin="0,0,0,30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="5,0,0,0">
+            <ui:TextBlock
+                Margin="0,0,0,5"
+                FontTypography="BodyStrong"
+                Text="Tên sản phẩm" />
+            <ui:TextBox PlaceholderText="Nhập tên sản phẩm" Text="{Binding Name, Mode=TwoWay}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,5,0">
+            <ui:TextBlock
+                Margin="0,0,0,5"
+                FontTypography="BodyStrong"
+                Text="Mã sản phẩm" />
+            <ui:TextBox
+                Name="ProductCode"
+                PlaceholderText="Nhập mã sản phẩm"
+                Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="1"
+            Margin="0,20,5,0">
+            <ui:TextBlock
+                Margin="0,0,0,5"
+                FontTypography="BodyStrong"
+                Text="Hãng" />
+            <ComboBox
+                DisplayMemberPath="Ten"
+                ItemsSource="{Binding BrandList}"
+                SelectedItem="{Binding SelectedBrand}"
+                Text="{Binding SelectedBrand.Ten}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="1"
+            Margin="5,20,0,0">
+            <ui:TextBlock
+                Margin="0,0,0,5"
+                FontTypography="BodyStrong"
+                Text="Phụ kiện" />
+            <ComboBox
+                DisplayMemberPath="MoTa"
+                ItemsSource="{Binding AccessoryList}"
+                SelectedItem="{Binding SelectedAccessory}"
+                Text="{Binding SelectedAccessory.MoTa}" />
+        </StackPanel>
+        <GroupBox
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Margin="0,20,0,0"
+            Padding="5"
+            BorderBrush="{x:Null}"
+            BorderThickness="1"
+            Header="Màu sắc">
+            <Grid x:Name="ProductColor" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-                    <ui:TextBlock Text="Tên sản phẩm" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ui:TextBox PlaceholderText="Nhập tên sản phẩm" />
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 20 5 0">
-                    <ui:TextBlock Text="Mã sản phẩm" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ui:TextBox PlaceholderText="Nhập mã sản phẩm" />
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                    <ui:TextBlock Text="Hãng" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ComboBox />
-                </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="1" Margin="0 20 5 0">
-                    <ui:TextBlock Text="Màu sắc" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ComboBox />
-                </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                    <ui:TextBlock Text="Phụ kiện" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ComboBox />
-                </StackPanel>
-                <StackPanel Grid.Row="3" Grid.Column="0" Margin="0 20 5 0">
-                    <ui:TextBlock Text="Ram" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ui:TextBox PlaceholderText="Nhập ram" />
-                </StackPanel>
-                <StackPanel Grid.Row="3" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                    <ui:TextBlock Text="Bộ nhớ trong" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ui:TextBox PlaceholderText="Nhập bộ nhớ trong" />
-                </StackPanel>
-                <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Margin="00 20 0 00">
-                    <ui:TextBlock Text="Mô tả" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                    <ui:RichTextBox/>
-                </StackPanel>
-                <GroupBox Grid.Row="5" Grid.ColumnSpan="2" Margin="0 20 0 0" Padding="20" BorderThickness="1">
-                    <StackPanel x:Name="ProductColor">
-                        <ui:Button Content="Thêm màu" Appearance="Primary"/>
-                        <ComboBox />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Width="200"
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding ColorList}"
+                    SelectedItem="{Binding SelectedColor}" />
+                <ui:Button
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="20,0,0,0"
+                    Appearance="Primary"
+                    Command="{Binding AddColorCommand}"
+                    Content="Thêm màu" />
+                <ui:ListView
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,20,0,0"
+                    d:ItemsSource="{d:SampleData ItemCount=2}"
+                    ItemsSource="{Binding ProductColorList}">
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-
-                    </StackPanel>
-                </GroupBox>
+                                <ui:Button
+                                    Grid.Column="1"
+                                    Appearance="Secondary"
+                                    Command="{Binding DataContext.RemoveColorCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"
+                                    Content="Xóa" />
+                                <ui:TextBlock
+                                    Grid.Column="0"
+                                    Padding="5"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Ten, Mode=OneWay}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+                </ui:ListView>
             </Grid>
-        </ui:ContentDialog>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            Margin="0,20,0,0"
+            Padding="5"
+            BorderBrush="{x:Null}"
+            BorderThickness="1"
+            Header="Bộ nhớ">
+            <Grid x:Name="ProductMemory" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="Bộ Nhớ Ram"
+                    Target="{Binding ElementName=InputRamMemory}" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="20,0,0,0"
+                    Content="Bộ Nhớ Trong"
+                    Target="{Binding ElementName=InputInternalMemory}" />
+                <ui:NumberBox
+                    Name="InputRamMemory"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Width="200"
+                    Text="{Binding InputRam}" />
+                <ui:NumberBox
+                    Name="InputInternalMemory"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="200"
+                    Margin="20,0,0,0"
+                    Text="{Binding InputStorage}" />
+                <ui:Button
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="20,0,0,0"
+                    Appearance="Primary"
+                    Command="{Binding AddStorageCommand}"
+                    Content="Thêm bộ nhớ" />
+                <ui:ListView
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,20,0,0"
+                    d:ItemsSource="{d:SampleData ItemCount=2}"
+                    ItemsSource="{Binding ProductStorageList}">
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <ui:TextBlock VerticalAlignment="Center" Text="Bộ Nhớ Ram" />
+                                    <ui:TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Bold"
+                                        Text="{Binding BoNhoRam, Mode=OneWay}" />
+                                    <ui:TextBlock VerticalAlignment="Center" Text=" GB" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ui:TextBlock VerticalAlignment="Center" Text="Bộ Nhớ Trong" />
+                                    <ui:TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Bold"
+                                        Text="{Binding BoNhoTrong, Mode=OneWay}" />
+                                    <ui:TextBlock VerticalAlignment="Center" Text=" GB" />
+                                </StackPanel>
+                                <ui:Button
+                                    Grid.Column="2"
+                                    Appearance="Secondary"
+                                    Command="{Binding DataContext.RemoveStorageCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"
+                                    Content="Xóa" />
+                            </Grid>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+                </ui:ListView>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Margin="0,20,0,0"
+            Padding="5"
+            BorderBrush="{x:Null}"
+            BorderThickness="1"
+            Header="Giá">
+            <Grid>
+
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBlock
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Tên Sản Phẩm" />
+                    <ui:TextBlock
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Màu Sản Phẩm" />
+                    <ui:TextBlock
+                        Grid.Column="2"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Ram(GB)" />
+                    <ui:TextBlock
+                        Grid.Column="3"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Bộ Nhớ(GB)" />
+                    <ui:TextBlock
+                        Grid.Column="4"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Số Lượng" />
+                    <ui:TextBlock
+                        Grid.Column="5"
+                        MinWidth="200"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Giá (Nghìn VND)" />
+                    <ui:TextBlock
+                        Grid.Column="6"
+                        MinWidth="50"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="Fn" />
+
+                </Grid>
+                <ui:ListView
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="5"
+                    Margin="0,20,0,0"
+                    d:ItemsSource="{d:SampleData ItemCount=2}"
+                    ItemsSource="{Binding ProductDetailList, Mode=TwoWay}">
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBlock
+                                    Grid.Column="0"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding DataContext.Name, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                <ui:TextBlock
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding IdMauSacNavigation.Ten, Mode=OneWay}" />
+                                <ui:TextBlock
+                                    Grid.Column="2"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Ram, Mode=OneWay}" />
+                                <ui:TextBlock
+                                    Grid.Column="3"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding BoNhoTrong, Mode=OneWay}" />
+                                <ui:TextBox
+                                    Grid.Column="4"
+                                    Margin="10,0,0,0"
+                                    Text="{Binding SoLuong, Mode=TwoWay}" />
+                                <ui:TextBox
+                                    Grid.Column="5"
+                                    MinWidth="200"
+                                    Margin="10,0,0,0"
+                                    Text="{Binding Gia, Mode=TwoWay}" />
+                                <ui:Button
+                                    Grid.Column="6"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Appearance="Danger"
+                                    Command="{Binding DataContext.RemoveProductPriceCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+                                    <ui:SymbolIcon Symbol="Delete24" />
+                                </ui:Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+                </ui:ListView>
+            </Grid>
+
+        </GroupBox>
+        <StackPanel
+            Grid.Row="6"
+            Grid.ColumnSpan="2"
+            Margin="00,20,0,00">
+            <Label
+                Margin="0,0,0,5"
+                Content="Mô Tả"
+                Target="{Binding ElementName=InputDescription}" />
+            <TextBox
+                Name="InputDescription"
+                AcceptsReturn="True"
+                Text="{Binding Description, Mode=TwoWay}"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="7"
+            Grid.ColumnSpan="2"
+            Margin="00,20,0,00"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+
+            <ui:Button Command="{Binding ClearDataCommand}" Content="Xóa dữ liệu" />
+            <ui:Button
+                Margin="20,00,0,0"
+                Appearance="Primary"
+                Command="{Binding AddProductCommand}"
+                Content="{Binding SaveButton}" />
+        </StackPanel>
     </Grid>
 </Page>

@@ -6,224 +6,182 @@
     xmlns:local="clr-namespace:BTLDotNET1.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:BTLDotNET1.Models"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:product="clr-namespace:BTLDotNET1.ViewModels.Pages.Product"
+    xmlns:product="clr-namespace:BTLDotNET1.ViewModels.Pages.Product"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="ProductPage"
-    d:DataContext="{d:DesignInstance product:ProductViewModel, IsDesignTimeCreatable=False}"
+    d:DataContext="{d:DesignInstance product:ProductViewModel,
+                                     IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    ScrollViewer.CanContentScroll="False"
+    ScrollViewer.CanContentScroll="True"
     mc:Ignorable="d">
 
-    <Page.Resources>
-    <ResourceDictionary>
-        <StackPanel x:Key="DialogContent">
-                <Grid Width="600">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-                        <ui:TextBlock Text="Tên sản phẩm" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập tên sản phẩm" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 20 5 0">
-                        <ui:TextBlock Text="Mã sản phẩm" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập mã sản phẩm" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                        <ui:TextBlock Text="Hãng" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ComboBox />
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="1" Margin="0 20 5 0">
-                        <ui:TextBlock Text="Màu sắc" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ComboBox />
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                        <ui:TextBlock Text="Phụ kiện" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ComboBox />
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="0 20 5 0">
-                        <ui:TextBlock Text="Ram" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập ram" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1"  Grid.ColumnSpan="1" Margin="5 20 0 0">
-                        <ui:TextBlock Text="Bộ nhớ trong" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập bộ nhớ trong" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Margin="00 20 0 00">
-                        <ui:TextBlock Text="Imei 1" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập imei 1" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="00 20 0 00">
-                        <ui:TextBlock Text="Imei 2 (*Nếu có)" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:TextBox PlaceholderText="Nhập imei 2" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="00 20 0 00">
-                        <ui:TextBlock Text="Mô tả" FontTypography="BodyStrong" Margin="0 0 0 5"/>
-                        <ui:RichTextBox/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-    </ResourceDictionary>
-    </Page.Resources>
-    <Grid>
+    <Grid Margin="0,0,0,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="0 0 0 20">
+        <Grid Grid.Row="0" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <ui:Button Content="Thêm sản phẩm" Margin="0 0 10 0" 
-                           Command="{Binding ShowDialogCommand}"
-                           CommandParameter="{StaticResource DialogContent}"/>
-                <ui:Button Content="Xóa sản phẩm đã chọn" Margin="0 0 10 0"/>
-                <ui:Button Content="Nhập từ excel" Margin="0 0 10 0"/>
-                <ui:Button Content="Xuất ra file excel" Margin="0 0 10 0"/>
+                <ui:Button
+                    Margin="0,0,10,0"
+                    Command="{Binding LoadDataCommand}"
+                    Content="Làm mới" />
+                <ui:Button Margin="0,0,10,0" Content="Nhập từ excel" />
+                <ui:Button Margin="0,0,10,0" Content="Xuất ra file excel" />
             </StackPanel>
-            <ui:AutoSuggestBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="300" PlaceholderText="Tìm kiếm sản phẩm..."/>
+            <ui:AutoSuggestBox
+                Grid.Column="1"
+                Width="300"
+                MinWidth="300"
+                Margin="71,0,0,0"
+                HorizontalAlignment="Right"
+                DisplayMemberPath="Ten"
+                OriginalItemsSource="{Binding SuggestedProductsList, Mode=OneWay}"
+                PlaceholderText="Tìm kiếm sản phẩm..."
+                Text="{Binding SearchedProduct, Mode=TwoWay}" />
         </Grid>
-        <Grid  Grid.Row="1" Margin="8,0">
+
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Center" />
+            <CheckBox
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Margin="0"
+                VerticalAlignment="Center" />
             <ui:TextBlock
-                Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.Column="1"
-                Margin="12,6,0,0"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontTypography="Body"
+                Text="Mã" />
+            <ui:TextBlock
+                Grid.RowSpan="2"
+                Grid.Column="2"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
                 FontTypography="BodyStrong"
                 Text="Tên" />
             <ui:TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="12,0,0,6"
+                Grid.RowSpan="2"
+                Grid.Column="3"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
                 FontTypography="Body"
-                Text="Mã" />
-            <ui:TextBlock 
-                Grid.Column="2" 
+                Text="Hãng" />
+            <ui:TextBlock
                 Grid.RowSpan="2"
+                Grid.Column="4"
+                Margin="12,0,0,0"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Margin="12,0,0,6"
-                 FontTypography="Body"
-                Text="Hãng" 
-                />
-            <ui:TextBlock 
-                Grid.Column="3" 
-                Grid.RowSpan="2"
-                VerticalAlignment="Center"
-                Margin="12,0,0,6"
-                 FontTypography="Body"
-                Text="Màu Sắc" 
-                />
-            <ui:TextBlock 
-                Grid.Column="4" 
-                Grid.Row="0"
-                Margin="12,0,0,6"
-                 FontTypography="Body"
-                Text="Ram (GB)" 
-                />
-            <ui:TextBlock 
-                Grid.Column="4" 
-                Grid.Row="1"
-                Margin="12,0,0,6"
-                 FontTypography="Body"
-                Text="Bộ Nhớ (GB)" 
-                />
+                FontTypography="Body"
+                Text="Chức năng" />
         </Grid>
+
         <ui:ListView
-                    Grid.Row="2"
-                    Margin="0 20 0 0"
-                    d:ItemsSource="{d:SampleData ItemCount=20}"
-                    ItemsSource="{Binding SanPham, Mode=TwoWay}"
-                    SelectionMode="Single">
-            <ui:ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type product:ProductViewModel }">
-                    <Grid Margin="8,0">
+            Grid.Row="2"
+            Margin="0,5,0,0"
+            Padding="0"
+            d:ItemsSource="{d:SampleData ItemCount=5}"
+            ItemsSource="{Binding ProductsList}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:SanPham}">
+                    <Grid Margin="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="200" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Center"/>
+                        <CheckBox
+                            Grid.RowSpan="2"
+                            Grid.Column="0"
+                            Margin="0"
+                            VerticalAlignment="Center" />
                         <ui:TextBlock
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    Margin="12,6,0,0"
-                                    FontTypography="BodyStrong"
-                                    Text="{Binding Ten, Mode=OneWay}" />
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontTypography="Body"
+                            Text="{Binding Ma}" />
                         <ui:TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Margin="12,0,0,6"
-                                    FontTypography="Body"
-                                    Text="{Binding Ma, Mode=OneWay}" />
-                        <ui:TextBlock 
-                                    Grid.Column="2" 
-                                    Grid.RowSpan="2"
-                                    VerticalAlignment="Center"
-                                    Margin="12,0,0,6"
-                                     FontTypography="Body"
-                                    Text="{Binding Hang, Mode=OneWay}" 
-                                    />
-                        <ui:TextBlock 
-                                    Grid.Column="3" 
-                                    Grid.RowSpan="2"
-                                    VerticalAlignment="Center"
-                                    Margin="12,0,0,6"
-                                     FontTypography="Body"
-                                    Text="{Binding MauSac, Mode=OneWay}" 
-                                    />
-                        <ui:TextBlock 
-                                    Grid.Column="4" 
-                                    Grid.Row="0"
-                                    Margin="12,0,0,6"
-                                     FontTypography="Body"
-                                    Text="{Binding Ram, Mode=OneWay}" 
-                                    />
-                        <ui:TextBlock 
-                                    Grid.Column="4" 
-                                    Grid.Row="1"
-                                    Margin="12,0,0,6"
-                                     FontTypography="Body"
-                                    Text="{Binding BoNho, Mode=OneWay}" 
-                                    />
+                            Grid.RowSpan="2"
+                            Grid.Column="2"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontTypography="BodyStrong"
+                            Text="{Binding Ten}" />
+                        <ui:TextBlock
+                            Grid.RowSpan="2"
+                            Grid.Column="3"
+                            Margin="12,0,0,6"
+                            VerticalAlignment="Center"
+                            FontTypography="Body"
+                            Text="{Binding IdHangNavigation.Ten}" />
+                        <StackPanel
+                            Grid.RowSpan="2"
+                            Grid.Column="4"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <ui:Button
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.NavigateToNextPageCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="AppsList24" />
+                            </ui:Button>
+                            <ui:Button
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.EditMultipleProductsListCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Edit24" />
+                            </ui:Button>
+                            <ui:Button
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Appearance="Danger"
+                                Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Delete24" />
+                            </ui:Button>
+                        </StackPanel>
+
                     </Grid>
+
                 </DataTemplate>
-            </ui:ListView.ItemTemplate>
+            </ListView.ItemTemplate>
         </ui:ListView>
-        <ContentPresenter x:Name="RootContentDialogPresenter" Grid.Row="1" Grid.RowSpan="2"  />
+        <ContentPresenter
+            x:Name="RootContentDialogPresenter"
+            Grid.Row="1"
+            Grid.RowSpan="2" />
     </Grid>
 </Page>

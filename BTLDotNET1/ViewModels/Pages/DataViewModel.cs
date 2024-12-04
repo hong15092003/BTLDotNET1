@@ -1,10 +1,11 @@
 ﻿using BTLDotNET1.Models;
 using System.Windows.Media;
-using Wpf.Ui.Controls;
+
+
 
 namespace BTLDotNET1.ViewModels.Pages
 {
-    public partial class DataViewModel : ObservableObject, INavigationAware
+    public partial class DataViewModel : ViewModel
     {
         private bool _isInitialized = false;
 
@@ -44,4 +45,5 @@ namespace BTLDotNET1.ViewModels.Pages
             _isInitialized = true;
         }
     }
+
 }

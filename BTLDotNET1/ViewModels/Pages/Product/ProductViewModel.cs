@@ -1,223 +1,153 @@
 ﻿using BTLDotNET1.Models;
+using BTLDotNET1.Services;
+using BTLDotNET1.Views.Pages.Product;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System;
-using System.Windows.Media;
-using Wpf.Ui.Controls;
-using System.ComponentModel;
-using System.Windows.Input;
 using Wpf.Ui;
-using Wpf.Ui.Extensions;
+using Wpf.Ui.Controls;
 
 namespace BTLDotNET1.ViewModels.Pages.Product
 {
-    public partial class ProductViewModel() : ViewModel
+    public partial class ProductViewModel : ViewModel
     {
+        private readonly INavigationService _navigationService;
+        private readonly ISnackbarService _snackbarService;
+        public IContentDialogService ContentDialogService { get; } = new ContentDialogService();
+        private readonly IGenericRepository<SanPham> _repositoryProduct;
+        private readonly IGenericRepository<Hang> _repositoryBrand;
+        private readonly IGenericRepository<ChiTietSanPham> _repositoryProductDetail;
+        private readonly IGenericRepository<MauSac> _repositoryColor;
+        private readonly IGenericRepository<PhuKien> _repositoryAccessory;
 
-
-
-        [ObservableProperty]
-        private ObservableCollection<XemSanPham> _sanPham = GetSanPham();
-        private bool _isAllChecked;
-        private bool _isChecked;
-
-        #region Variables Dialog
-        private string _id;
-        private string _ma;
-        private string _ten;
-        private string _mauSac;
-        private string _hang;
-        private int _ram;
-        private int _boNho;
-        
-
-
-        #endregion
-
-
-
-
-        public IContentDialogService contentDialogService = new ContentDialogService();
-
-        public ObservableCollection<XemSanPham> sanPham
+        public ProductViewModel(
+            INavigationService navigationService,
+            ISnackbarService snackbarService,
+            IGenericRepository<SanPham> repositoryProduct,
+            IGenericRepository<Hang> repositoryBrand,
+            IGenericRepository<ChiTietSanPham> repositoryProductDetail,
+            IGenericRepository<MauSac> repositoryColor,
+            IGenericRepository<PhuKien> repositoryAccessory)
         {
-            get => _sanPham;
-            set
-            {
-                _sanPham = value;
-                OnPropertyChanged(nameof(sanPham));
-            }
+            _snackbarService = snackbarService;
+            _repositoryProduct = repositoryProduct;
+            _repositoryBrand = repositoryBrand;
+            _repositoryProductDetail = repositoryProductDetail;
+            _repositoryColor = repositoryColor;
+            _repositoryAccessory = repositoryAccessory;
+            _navigationService = navigationService;
+            Task _ = LoadData();
         }
 
+        [ObservableProperty]
+        private bool isAllChecked;
 
+        [ObservableProperty]
+        private bool isChecked;
 
-        public bool IsAllChecked
+        [ObservableProperty]
+        private ObservableCollection<SanPham>? productsList;
+
+        [ObservableProperty]
+        private ObservableCollection<SanPham>? suggestedProductsList;
+
+        [ObservableProperty]
+        private SanPham? searchedProduct;
+
+        [RelayCommand]
+        private async Task LoadData()
         {
-            get { return _isAllChecked; }
-            set
+            var productListTask = await _repositoryProduct.GetAllAsync();
+            if (productListTask != null)
             {
-                if (_isAllChecked != value)
+                foreach (var product in productListTask)
                 {
-                    _isAllChecked = value;
-                    OnPropertyChanged();
-                    CheckAllItems(_isAllChecked);
+                    product.IdHangNavigation = await _repositoryBrand.GetByIdAsync(product.IdHang) ?? new Hang();
                 }
+                ProductsList = new ObservableCollection<SanPham>(productListTask);
+                SuggestedProductsList = ProductsList;
+            }
+
+        }
+
+        [RelayCommand]
+        public void EditMultipleProductsList(SanPham product)
+        {
+            var addProductViewModel = new AddProductViewModel(
+                _snackbarService,
+                _repositoryProduct,
+                _repositoryBrand,
+                _repositoryProductDetail,
+                _repositoryColor,
+                _repositoryAccessory
+                );
+            addProductViewModel.SetCode(product.Ma);
+            _navigationService.Navigate(typeof(AddProductPage), addProductViewModel);
+        }
+
+        [RelayCommand]
+        public async Task DeleteProduct(SanPham product)
+        {
+            var productDetailsOfProduct = await _repositoryProductDetail.GetByNameAsync(pd => pd.IdSanPham == product.Id);
+            foreach (var productDetail in productDetailsOfProduct)
+            {
+                bool isDeleteProductDetail = await _repositoryProductDetail.DeleteAsync(productDetail.Id);
+                if (isDeleteProductDetail)
+                {
+                    productDetailsOfProduct.ToList().Remove(productDetail);
+                }
+            }
+            if (productDetailsOfProduct.Count() == 0)
+            {
+                bool isDelete = await _repositoryProduct.DeleteAsync(product.Id);
+                if (isDelete)
+                {
+                    OnOpenSnackbar("Thông báo", "Xóa sản phẩm thành công", ControlAppearance.Success);
+                    await LoadData();
+                }
+                else
+                {
+                    OnOpenSnackbar("Thông báo", "Xóa sản phẩm thất bại", ControlAppearance.Danger);
+                }
+            }
+            else if (productDetailsOfProduct.Count() > 0)
+            {
+                foreach (var productDetail in productDetailsOfProduct)
+                {
+                    productDetail.StatusDeleted = true;
+                    await _repositoryProductDetail.UpdateAsync(productDetail);
+
+                }
+                product.StatusDeleted = true;
+                await _repositoryProduct.UpdateAsync(product);
+                OnOpenSnackbar("Thông báo", "Xóa sản phẩm thành công", ControlAppearance.Success);
+                await LoadData();
             }
         }
 
         [RelayCommand]
-        private async Task OnShowDialog(object content)
+        public void NavigateToNextPage(SanPham product)
         {
-            ContentDialogResult result = await contentDialogService.ShowSimpleDialogAsync(
-                new SimpleContentDialogCreateOptions()
-                {
-                    Title = "Thêm sản phẩm",
-                    Content = content,
-                    PrimaryButtonText = "Lưu",
-                    CloseButtonText = "Thoát",
-                }
-            );
+            if (product == null) return;
 
-            dynamic DialogResultText = result switch
+            var productDetailViewModel = new ProductDetailViewModel(
+                _repositoryAccessory,
+                _repositoryColor,
+                _repositoryProductDetail);
+            productDetailViewModel.AddParentProduct(product);
+            _navigationService.NavigateWithHierarchy(typeof(ProductDetailPage), productDetailViewModel);
+        }
+
+        private void OnOpenSnackbar(string title, string message, ControlAppearance appearance)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                ContentDialogResult.Primary => "User saved their work",
-                ContentDialogResult.Secondary => "User did not save their work",
-                _ => "User cancelled the dialog"
-            };
+                _snackbarService.Show(
+                    title,
+                    message,
+                    appearance,
+                    new SymbolIcon(SymbolRegular.DocumentError24),
+                    TimeSpan.FromSeconds(2));
+            });
         }
-
-        private static ObservableCollection<XemSanPham> GetSanPham()
-        {
-            return new ObservableCollection<XemSanPham>
-                {
-                    new XemSanPham
-                    {
-                        Id = "0001",
-                        Ma="IP12PRM",
-                        Ten = "iPhone 12 Pro Max",
-                        MauSac = "Blue",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-
-                    new XemSanPham
-                    {
-                        Id = "0002",
-                        Ma="IP12PR",
-                        Ten = "iPhone 12 Pro",
-                        MauSac = "White",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0003",
-                        Ma="IP12",
-                        Ten = "iPhone 12",
-                        MauSac = "Black",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0004",
-                        Ma="IP11",
-                        Ten = "iPhone 11",
-                        MauSac = "Red",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0005",
-                        Ma="IP11PR",
-                        Ten = "iPhone 11 Pro",
-                        MauSac = "Green",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0006",
-                        Ma="IP11PRM",
-                        Ten = "iPhone 11 Pro Max",
-                        MauSac = "Yellow",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0007",
-                        Ma="IPXS",
-                        Ten = "iPhone XS",
-                        MauSac = "Blue",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0008",
-                        Ma="IPXSM",
-                        Ten = "iPhone XS Max",
-                        MauSac = "White",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                    new XemSanPham
-                    {
-                        Id = "0009",
-                        Ma="IPXR",
-                        Ten = "iPhone XR",
-                        MauSac = "Black",
-                        Hang = "Apple",
-                        Ram = 4,
-                        BoNho = 128,
-                    },
-                };
-        }
-
-
-        private void CheckAllItems(object parameter)
-        {
-            bool isChecked = (bool)parameter;
-            foreach (var item in sanPham)
-            {
-                item.IsChecked = isChecked;
-            }
-        }
-
-
-        public new event PropertyChangedEventHandler PropertyChanged;
-
-
-
-        protected new void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        public record XemSanPham
-        {
-            public bool IsChecked { get; set; }
-            public string Id { get; set; }
-            public string Ten { get; set; }
-            public string Ma { get; set; }
-            public string MauSac { get; set; }
-            public string Hang { get; set; }
-            public int Ram { get; set; }
-            public int BoNho { get; set; }
-
-        }
-
 
     }
 }

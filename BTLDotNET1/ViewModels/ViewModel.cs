@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wpf.Ui.Controls;
+﻿using Wpf.Ui.Controls;
 
 namespace BTLDotNET1.ViewModels
 {
     public abstract partial class ViewModel : ObservableObject, INavigationAware
     {
+
         /// <inheritdoc />
         public virtual async Task OnNavigatedToAsync()
         {

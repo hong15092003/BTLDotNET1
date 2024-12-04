@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class CtspKhuyenMai
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string IdKhuyenMai { get; set; } = null!;
-
-    public int? DonGiaMai { get; set; }
-
-    public int? DonGiaConLai { get; set; }
+    public string IdKhuyenMai { get; set; }
 
     public bool? TrangThai { get; set; }
 
@@ -21,7 +14,9 @@ public partial class CtspKhuyenMai
 
     public bool? StatusDeleted { get; set; }
 
+    public decimal? GiaGiam { get; set; }
+
     public virtual ICollection<ChiTietSanPham> ChiTietSanPhams { get; set; } = new List<ChiTietSanPham>();
 
-    public virtual ICollection<KhuyenMai> KhuyenMais { get; set; } = new List<KhuyenMai>();
+    public virtual KhuyenMai IdKhuyenMaiNavigation { get; set; }
 }

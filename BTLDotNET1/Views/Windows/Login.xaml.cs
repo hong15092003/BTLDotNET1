@@ -2,10 +2,6 @@
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using System.Windows;
-using BTLDotNET1.Services;
-using System.Windows.Navigation;
-using Microsoft.Extensions.Hosting;
 
 namespace BTLDotNET1.Views.Windows
 {
@@ -14,8 +10,7 @@ namespace BTLDotNET1.Views.Windows
         public LoginViewModel ViewModel { get; set; }
 
 
-        private IPageService _pageService;
-        private INavigationService _navigationService;
+
 
         public Login(IPageService pageService, INavigationService navigationService)
         {
@@ -28,47 +23,16 @@ namespace BTLDotNET1.Views.Windows
             Password.Icon = new SymbolIcon { Symbol = SymbolRegular.Password24 };
 
             // Gán các dịch vụ được truyền vào
-            _pageService = pageService;
-            _navigationService = navigationService;
-        }
+            ViewModel.PageService = pageService;
+            ViewModel.NavigationService = navigationService;
+            ViewModel.LoginView = this;
 
-        private void OpenMessageBox(string title, string content, string buttonContent)
-        {
-            var uiMessageBox = new Wpf.Ui.Controls.MessageBox
-            {
-                Title = title,
-                Content = content,
-                CloseButtonAppearance = ControlAppearance.Primary,
-                CloseButtonText = buttonContent,
-
-            };
-
-            uiMessageBox.ShowDialogAsync();
         }
 
 
-        // Thêm phương thức xử lý đăng nhập
-        private void OnLoginButtonClick(object sender, RoutedEventArgs e)
-        {
-            // Giả sử bạn có một phương thức trong ViewModel để kiểm tra thông tin đăng nhập
-            ViewModel.Login();
-            if (!ViewModel.IsLoginSuccess)
-            {
-              
-                // Đăng nhập thành công, chuyển hướng đến trang chính
-                var mainWindowViewModel = new MainWindowViewModel();
-                var mainWindow = new MainWindow(mainWindowViewModel, _pageService, _navigationService);
-                mainWindow.ShowWindow();
-                this.Hide();
 
-            }
-            else
-            {
 
-                OpenMessageBox("Lỗi", ViewModel.LoginMessage, "Thử lại");
 
-            }
-        }
         #region INavigationWindow methods
 
 

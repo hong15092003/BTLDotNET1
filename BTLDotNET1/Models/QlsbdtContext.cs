@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BTLDotNET1.Models;
 
-public partial class QlsbdtContext : DbContext
+public partial class QLSBDTContext : DbContext
 {
-    public QlsbdtContext()
-    {
-    }
-
-    public QlsbdtContext(DbContextOptions<QlsbdtContext> options)
+    public QLSBDTContext(DbContextOptions<QLSBDTContext> options)
         : base(options)
     {
     }
@@ -51,7 +45,10 @@ public partial class QlsbdtContext : DbContext
 
     public virtual DbSet<TinhTp> TinhTps { get; set; }
 
+    public virtual DbSet<VaiTro> VaiTros { get; set; }
+
     public virtual DbSet<XaPhuong> XaPhuongs { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -94,12 +91,15 @@ public partial class QlsbdtContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.IdHuyenQuan)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_huyen_quan");
             entity.Property(e => e.IdTinhTp)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_tinh_tp");
             entity.Property(e => e.IdXaPhuong)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_xa_phuong");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
@@ -135,19 +135,23 @@ public partial class QlsbdtContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.BoNhoTrong).HasColumnName("bo_nho_trong");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
+            entity.Property(e => e.Gia)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("gia");
             entity.Property(e => e.IdCtspKhuyenMai)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_ctsp_khuyen_mai");
-            entity.Property(e => e.IdHang)
-                .HasMaxLength(255)
-                .HasColumnName("id_hang");
             entity.Property(e => e.IdMauSac)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_mau_sac");
             entity.Property(e => e.IdPhuKien)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_phu_kien");
             entity.Property(e => e.IdSanPham)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_san_pham");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
@@ -155,6 +159,7 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("mo_ta");
             entity.Property(e => e.Ram).HasColumnName("ram");
+            entity.Property(e => e.SoLuong).HasColumnName("so_luong");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
 
             entity.HasOne(d => d.IdCtspKhuyenMaiNavigation).WithMany(p => p.ChiTietSanPhams)
@@ -188,14 +193,21 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
-            entity.Property(e => e.DonGiaConLai).HasColumnName("don_gia_con_lai");
-            entity.Property(e => e.DonGiaMai).HasColumnName("don_gia_mai");
+            entity.Property(e => e.GiaGiam)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("gia_giam");
             entity.Property(e => e.IdKhuyenMai)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_khuyen_mai");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
             entity.Property(e => e.TrangThai).HasColumnName("trang_thai");
+
+            entity.HasOne(d => d.IdKhuyenMaiNavigation).WithMany(p => p.CtspKhuyenMais)
+                .HasForeignKey(d => d.IdKhuyenMai)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CTSP_khuyen_mai_Khuyen_mai");
         });
 
         modelBuilder.Entity<Hang>(entity =>
@@ -210,6 +222,7 @@ public partial class QlsbdtContext : DbContext
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
@@ -232,13 +245,16 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("hinh_thuc_thanh_toan");
             entity.Property(e => e.IdKh)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_kh");
             entity.Property(e => e.IdNv)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_nv");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.NgayTao).HasColumnName("ngay_tao");
@@ -275,22 +291,18 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
-            entity.Property(e => e.GiaBan)
-                .HasMaxLength(255)
-                .HasColumnName("gia_ban");
+            entity.Property(e => e.DonGia)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("don_gia");
             entity.Property(e => e.IdHoaDon)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_hoa_don");
             entity.Property(e => e.IdSanPham)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_san_pham");
-            entity.Property(e => e.KichThuoc)
-                .HasMaxLength(255)
-                .HasColumnName("kich_thuoc");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
-            entity.Property(e => e.MauSac)
-                .HasMaxLength(255)
-                .HasColumnName("mau_sac");
             entity.Property(e => e.SoLuong).HasColumnName("so_luong");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
 
@@ -319,16 +331,20 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("ghi_chu");
             entity.Property(e => e.IdChiTietHoaDon)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_chi_tiet_hoa_don");
             entity.Property(e => e.IdKh)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_kh");
             entity.Property(e => e.IdNv)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_nv");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.NgayTra).HasColumnName("ngay_tra");
@@ -367,9 +383,11 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("gia_ban");
             entity.Property(e => e.IdHoaDonTraHang)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_hoa_don_tra_hang");
             entity.Property(e => e.IdSanPham)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_san_pham");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
@@ -393,11 +411,13 @@ public partial class QlsbdtContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.IdTinhTp)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_tinh_tp");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
             entity.Property(e => e.Ten)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ten");
 
@@ -415,12 +435,15 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("id");
             entity.Property(e => e.IdChiTietHoaDon)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_chi_tiet_hoa_don");
             entity.Property(e => e.IdChiTietSanPham)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_chi_tiet_san_pham");
             entity.Property(e => e.Imei1)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsFixedLength()
                 .HasColumnName("imei_1");
@@ -460,10 +483,12 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("ho_ten");
             entity.Property(e => e.IdDiaChi)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_dia_chi");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.MaKh)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma_kh");
             entity.Property(e => e.NgaySinh).HasColumnName("ngay_sinh");
@@ -490,6 +515,7 @@ public partial class QlsbdtContext : DbContext
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.NgayBatDau).HasColumnName("ngay_bat_dau");
@@ -499,11 +525,6 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("ten_loai_km");
             entity.Property(e => e.TrangThai).HasColumnName("trang_thai");
-
-            entity.HasOne(d => d.MaNavigation).WithMany(p => p.KhuyenMais)
-                .HasForeignKey(d => d.Ma)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CTSP_khuyen_mai_Khuyen_mai");
         });
 
         modelBuilder.Entity<MauSac>(entity =>
@@ -518,6 +539,7 @@ public partial class QlsbdtContext : DbContext
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
@@ -546,10 +568,15 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("ho_ten");
             entity.Property(e => e.IdDiaChi)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_dia_chi");
+            entity.Property(e => e.IdVaiTro)
+                .HasMaxLength(50)
+                .HasColumnName("id_vai_tro");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.MaNv)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma_nv");
             entity.Property(e => e.MatKhau)
@@ -561,14 +588,15 @@ public partial class QlsbdtContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("sdt");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
-            entity.Property(e => e.VaiTro)
-                .HasMaxLength(255)
-                .HasColumnName("vai_tro");
 
             entity.HasOne(d => d.IdDiaChiNavigation).WithMany(p => p.NhanViens)
                 .HasForeignKey(d => d.IdDiaChi)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Nhan_vien_Chi_tiet_dia_chi");
+
+            entity.HasOne(d => d.IdVaiTroNavigation).WithMany(p => p.NhanViens)
+                .HasForeignKey(d => d.IdVaiTro)
+                .HasConstraintName("FK_Nhan_vien_Vai_Tro");
         });
 
         modelBuilder.Entity<PhuKien>(entity =>
@@ -601,11 +629,13 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
-            entity.Property(e => e.IdSanPham)
+            entity.Property(e => e.IdHang)
+                .IsRequired()
                 .HasMaxLength(255)
-                .HasColumnName("id_san_pham");
+                .HasColumnName("id_hang");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.Ma)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ma");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
@@ -613,8 +643,8 @@ public partial class QlsbdtContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("ten");
 
-            entity.HasOne(d => d.IdSanPhamNavigation).WithMany(p => p.SanPhams)
-                .HasForeignKey(d => d.IdSanPham)
+            entity.HasOne(d => d.IdHangNavigation).WithMany(p => p.SanPhams)
+                .HasForeignKey(d => d.IdHang)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_San_pham_Hang");
         });
@@ -632,7 +662,20 @@ public partial class QlsbdtContext : DbContext
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
             entity.Property(e => e.Ten)
+                .IsRequired()
                 .HasMaxLength(255)
+                .HasColumnName("ten");
+        });
+
+        modelBuilder.Entity<VaiTro>(entity =>
+        {
+            entity.ToTable("Vai_Tro");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id");
+            entity.Property(e => e.Ten)
+                .HasMaxLength(50)
                 .HasColumnName("ten");
         });
 
@@ -647,11 +690,13 @@ public partial class QlsbdtContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.CreateDate).HasColumnName("create_date");
             entity.Property(e => e.IdHuyenQuan)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("id_huyen_quan");
             entity.Property(e => e.LastModifiedDate).HasColumnName("last_modified_date");
             entity.Property(e => e.StatusDeleted).HasColumnName("status_Deleted");
             entity.Property(e => e.Ten)
+                .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnName("ten");
 

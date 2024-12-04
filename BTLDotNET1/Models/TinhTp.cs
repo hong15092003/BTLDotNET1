@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class TinhTp
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string Ten { get; set; } = null!;
+    public string Ten { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 

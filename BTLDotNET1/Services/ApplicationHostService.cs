@@ -1,6 +1,4 @@
-﻿using BTLDotNET1.Views.Pages;
-using BTLDotNET1.Views.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using BTLDotNET1.Views.Windows;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;
 
@@ -26,7 +24,7 @@ namespace BTLDotNET1.Services
         /// <param name="cancellationToken">Indicates that the start process has been aborted.</param>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await HandleActivationAsync();
+            await HandleActivationMainAsync();
         }
 
         /// <summary>
@@ -41,17 +39,8 @@ namespace BTLDotNET1.Services
         /// <summary>
         /// Creates main window during activation.
         /// </summary>
-        private async Task HandleActivationAsync()
+        public async Task HandleActivationLoginAsync()
         {
-            //if (!Application.Current.Windows.OfType<MainWindow>().Any())
-            //{
-            //    _navigationWindow = (
-            //        _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow
-            //    )!;
-            //    _navigationWindow!.ShowWindow();
-
-            //    _navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));
-            //}
             if (!Application.Current.Windows.OfType<Login>().Any())
             {
                 _navigationWindow = (
@@ -63,5 +52,20 @@ namespace BTLDotNET1.Services
 
             await Task.CompletedTask;
         }
+        public async Task HandleActivationMainAsync()
+        {
+            if (!Application.Current.Windows.OfType<MainWindow>().Any())
+            {
+                _navigationWindow = (
+                    _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow
+                )!;
+                _navigationWindow!.ShowWindow();
+
+                _navigationWindow.Navigate(typeof(Views.Pages.SellPage));
+            }
+
+            await Task.CompletedTask;
+        }
+
     }
 }

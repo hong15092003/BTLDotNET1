@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class HoaDonChiTiet
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string IdHoaDon { get; set; } = null!;
+    public string IdHoaDon { get; set; }
 
-    public string IdSanPham { get; set; } = null!;
-
-    public string? KichThuoc { get; set; }
-
-    public string? MauSac { get; set; }
+    public string IdSanPham { get; set; }
 
     public int? SoLuong { get; set; }
 
-    public string? GiaBan { get; set; }
+    public decimal? DonGia { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -27,9 +20,9 @@ public partial class HoaDonChiTiet
 
     public virtual ICollection<HoaDonTraHang> HoaDonTraHangs { get; set; } = new List<HoaDonTraHang>();
 
-    public virtual HoaDon IdHoaDonNavigation { get; set; } = null!;
+    public virtual HoaDon IdHoaDonNavigation { get; set; }
 
-    public virtual ChiTietSanPham IdSanPhamNavigation { get; set; } = null!;
+    public virtual ChiTietSanPham IdSanPhamNavigation { get; set; }
 
     public virtual ICollection<Imei> Imeis { get; set; } = new List<Imei>();
 }

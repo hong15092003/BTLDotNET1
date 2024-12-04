@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BTLDotNET1.Models;
+﻿namespace BTLDotNET1.Models;
 
 public partial class HuyenQuan
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string IdTinhTp { get; set; } = null!;
+    public string IdTinhTp { get; set; }
 
-    public string Ten { get; set; } = null!;
+    public string Ten { get; set; }
 
     public DateOnly? CreateDate { get; set; }
 
@@ -19,7 +16,7 @@ public partial class HuyenQuan
 
     public virtual ICollection<ChiTietDiaChi> ChiTietDiaChis { get; set; } = new List<ChiTietDiaChi>();
 
-    public virtual TinhTp IdTinhTpNavigation { get; set; } = null!;
+    public virtual TinhTp IdTinhTpNavigation { get; set; }
 
     public virtual ICollection<XaPhuong> XaPhuongs { get; set; } = new List<XaPhuong>();
 }

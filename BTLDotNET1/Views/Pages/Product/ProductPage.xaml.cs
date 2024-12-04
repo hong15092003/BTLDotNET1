@@ -1,7 +1,4 @@
-﻿using BTLDotNET1.ViewModels.Pages;
-using BTLDotNET1.ViewModels.Pages.Product;
-using System.Windows.Media;
-using Wpf.Ui;
+﻿using BTLDotNET1.ViewModels.Pages.Product;
 using Wpf.Ui.Controls;
 
 namespace BTLDotNET1.Views.Pages.Product
@@ -12,10 +9,9 @@ namespace BTLDotNET1.Views.Pages.Product
 
         public ProductPage(ProductViewModel viewModel)
         {
+            InitializeComponent();
             ViewModel = viewModel;
             DataContext = viewModel;
-            InitializeComponent();
-            viewModel.contentDialogService.SetDialogHost(RootContentDialogPresenter);
         }
     }
 }

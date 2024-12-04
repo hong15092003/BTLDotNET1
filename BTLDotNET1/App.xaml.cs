@@ -1,10 +1,17 @@
-﻿using BTLDotNET1.Services;
+﻿using BTLDotNET1.Models;
+using BTLDotNET1.Services;
 using BTLDotNET1.ViewModels.Pages;
+using BTLDotNET1.ViewModels.Pages.Customer;
+using BTLDotNET1.ViewModels.Pages.Employee;
 using BTLDotNET1.ViewModels.Pages.Product;
+using BTLDotNET1.ViewModels.Pages.Sell;
 using BTLDotNET1.ViewModels.Windows;
 using BTLDotNET1.Views.Pages;
+using BTLDotNET1.Views.Pages.Customer;
+using BTLDotNET1.Views.Pages.Employee;
 using BTLDotNET1.Views.Pages.Product;
 using BTLDotNET1.Views.Windows;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,11 +35,16 @@ namespace BTLDotNET1
             // Đăng ký các dịch vụ cho ứng dụng.
             .ConfigureServices((context, services) =>
             {
+                services.AddDbContext<QLSBDTContext>(options =>
+    options.UseSqlServer("Server=PINK;Database=QLSBDT;Trusted_Connection=True;TrustServerCertificate=True;"));
+
+
                 // Đăng ký dịch vụ ApplicationHostService như một dịch vụ được host.
                 services.AddHostedService<ApplicationHostService>();
 
                 //
                 services.AddSingleton<IContentDialogService, ContentDialogService>();
+                services.AddSingleton<ISnackbarService, SnackbarService>();
 
 
                 // Đăng ký dịch vụ IPageService để quản lý các trang trong ứng dụng.
@@ -46,15 +58,21 @@ namespace BTLDotNET1
 
                 // Đăng ký dịch vụ INavigationService để chứa các phương thức điều hướng trong ứng dụng.
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddTransient<ProductDetailPage>();
+
+
+                // Register generic repository
+                services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
                 // Đăng ký cửa sổ chính của ứng dụng và cửa sổ đăng nhập.
+                services.AddSingleton<INavigationWindow, Login>();
                 services.AddSingleton<INavigationWindow, MainWindow>();
-                services.AddSingleton<INavigationWindow,Login>();
+
 
                 // Đăng ký các ViewModel cho các cửa sổ và trang.
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<LoginViewModel>();
-                 
+
                 // Đăng ký các trang và ViewModel tương ứng.
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
@@ -66,6 +84,27 @@ namespace BTLDotNET1
                 services.AddSingleton<ProductViewModel>();
                 services.AddSingleton<AddProductPage>();
                 services.AddSingleton<AddProductViewModel>();
+                services.AddSingleton<ProductDetailPage>();
+                services.AddSingleton<ProductDetailViewModel>();
+                services.AddSingleton<BrandPage>();
+                services.AddSingleton<BrandViewModel>();
+                services.AddSingleton<ColorPage>();
+                services.AddSingleton<ColorViewModel>();
+                services.AddSingleton<AccessoryPage>();
+                services.AddSingleton<AccessoryViewModel>();
+                services.AddSingleton<CustomerPage>();
+                services.AddSingleton<CustomerViewModel>();
+                services.AddSingleton<AddCustomerPage>();
+                services.AddSingleton<AddCustomerViewModel>();
+                services.AddSingleton<EmployeePage>();
+                services.AddSingleton<EmployeeViewModel>();
+                services.AddSingleton<AddEmployeePage>();
+                services.AddSingleton<AddEmployeeViewModel>();
+                services.AddSingleton<LoginViewModel>();
+                services.AddSingleton<Login>();
+                services.AddSingleton<SellPage>();
+                services.AddSingleton<SellViewModel>();
+
             }).Build();
 
         /// <summary>
@@ -73,7 +112,7 @@ namespace BTLDotNET1
         /// </summary>
         /// <typeparam name="T">Kiểu của dịch vụ cần lấy.</typeparam>
         /// <returns>Đối tượng của dịch vụ hoặc <see langword="null"/>.</returns>
-        public static T GetService<T>()
+        public static T? GetService<T>()
             where T : class
         {
             // Lấy dịch vụ từ host và ép kiểu về kiểu T.

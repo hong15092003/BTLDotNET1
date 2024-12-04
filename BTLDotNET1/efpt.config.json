@@ -1,0 +1,123 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "QLSBDTContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "BTLDotNET1",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Bao_hanh]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Chi_tiet_dia_chi]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Chi_tiet_san_pham]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CTSP_khuyen_mai]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hang]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hoa_don]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hoa_don_chi_tiet]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hoa_don_tra_hang]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hoa_don_tra_hang_chi_tiet]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Huyen_quan]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Imei]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Khach_hang]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Khuyen_mai]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Mau_sac]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Nhan_vien]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Phu_kien]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[San_pham]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tinh_tp]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Vai_Tro]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Xa_phuong]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": true,
+   "UseT4Split": false
+}
