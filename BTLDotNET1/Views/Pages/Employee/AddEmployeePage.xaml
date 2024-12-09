@@ -51,7 +51,8 @@
                 Text="Mã Nhân Viên" />
             <ui:TextBox
                 Name="EmployeeCode"
-                PlaceholderText="Nhập mã nhân viên"
+                IsEnabled="False"
+                PlaceholderText="Mã nhân viên"
                 Text="{Binding EmployeeCode, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel
@@ -115,7 +116,7 @@
                 Margin="0,0,0,5"
                 FontTypography="BodyStrong"
                 Text="Mật Khẩu" />
-            <ui:PasswordBox Icon="Password24" Text="{Binding Password, Mode=TwoWay}" />
+            <ui:PasswordBox Icon="Password24" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel
             Grid.Row="3"

@@ -9,32 +9,33 @@ namespace BTLDotNET1.ViewModels.Pages.Product
 {
     public partial class ProductViewModel : ViewModel
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly INavigationService _navigationService;
         private readonly ISnackbarService _snackbarService;
         public IContentDialogService ContentDialogService { get; } = new ContentDialogService();
         private readonly IGenericRepository<SanPham> _repositoryProduct;
         private readonly IGenericRepository<Hang> _repositoryBrand;
         private readonly IGenericRepository<ChiTietSanPham> _repositoryProductDetail;
-        private readonly IGenericRepository<MauSac> _repositoryColor;
-        private readonly IGenericRepository<PhuKien> _repositoryAccessory;
 
         public ProductViewModel(
+            IServiceProvider serviceProvider,
             INavigationService navigationService,
             ISnackbarService snackbarService,
             IGenericRepository<SanPham> repositoryProduct,
             IGenericRepository<Hang> repositoryBrand,
-            IGenericRepository<ChiTietSanPham> repositoryProductDetail,
-            IGenericRepository<MauSac> repositoryColor,
-            IGenericRepository<PhuKien> repositoryAccessory)
+            IGenericRepository<ChiTietSanPham> repositoryProductDetail
+
+)
         {
+            _serviceProvider = serviceProvider;
             _snackbarService = snackbarService;
             _repositoryProduct = repositoryProduct;
             _repositoryBrand = repositoryBrand;
-            _repositoryProductDetail = repositoryProductDetail;
-            _repositoryColor = repositoryColor;
-            _repositoryAccessory = repositoryAccessory;
+
             _navigationService = navigationService;
             Task _ = LoadData();
+            _repositoryProductDetail = repositoryProductDetail;
+            _repositoryProductDetail = repositoryProductDetail;
         }
 
         [ObservableProperty]
@@ -71,14 +72,7 @@ namespace BTLDotNET1.ViewModels.Pages.Product
         [RelayCommand]
         public void EditMultipleProductsList(SanPham product)
         {
-            var addProductViewModel = new AddProductViewModel(
-                _snackbarService,
-                _repositoryProduct,
-                _repositoryBrand,
-                _repositoryProductDetail,
-                _repositoryColor,
-                _repositoryAccessory
-                );
+            var addProductViewModel = _serviceProvider.GetService(typeof(AddProductViewModel)) as AddProductViewModel;
             addProductViewModel.SetCode(product.Ma);
             _navigationService.Navigate(typeof(AddProductPage), addProductViewModel);
         }
@@ -128,11 +122,8 @@ namespace BTLDotNET1.ViewModels.Pages.Product
         {
             if (product == null) return;
 
-            var productDetailViewModel = new ProductDetailViewModel(
-                _repositoryAccessory,
-                _repositoryColor,
-                _repositoryProductDetail);
-            productDetailViewModel.AddParentProduct(product);
+            var productDetailViewModel = _serviceProvider.GetService(typeof(ProductDetailViewModel)) as ProductDetailViewModel;
+            productDetailViewModel!.AddParentProduct(product);
             _navigationService.NavigateWithHierarchy(typeof(ProductDetailPage), productDetailViewModel);
         }
 

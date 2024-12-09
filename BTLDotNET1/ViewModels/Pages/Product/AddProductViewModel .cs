@@ -222,11 +222,11 @@ namespace BTLDotNET1.ViewModels.Pages.Product
 
         private void RemoveProductPrice(MauSac attribute)
         {
-            var itemsToRemove = ProductDetailList
+            var itemsToRemove = ProductDetailList!
                 .Where(item => item.IdMauSacNavigation == attribute).ToList();
             foreach (var item in itemsToRemove)
             {
-                ProductDetailList.Remove(item);
+                ProductDetailList!.Remove(item);
             }
         }
 

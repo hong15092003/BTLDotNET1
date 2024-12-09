@@ -1,0 +1,103 @@
+﻿<UserControl
+    x:Class="BTLDotNET1.Views.Components.Dialog.EmployeeDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialog="clr-namespace:BTLDotNET1.ViewModels.Components.Dialog"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:BTLDotNET1.Models"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance dialog:EmployeeDialogViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+    <Grid>
+        <ui:ListView
+            x:Name="EmployeeListView"
+            ItemsSource="{Binding SelectedEmployee}"
+            SelectionMode="Single">
+            <ui:ListView.ItemTemplate>
+                <DataTemplate DataType="models:NhanVien">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <ui:TextBlock FontWeight="Bold" Text="Mã Nhân Viên" />
+                            <ui:TextBlock Text="{Binding MaNv}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <ui:TextBlock FontWeight="Bold" Text="" />
+                            <ui:TextBlock Text="{Binding HoTen}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <ui:TextBlock FontWeight="Bold" Text="Mã Nhân Viên" />
+                            <ui:TextBlock Text="{Binding IdVaiTroNavigation.Ten}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <ui:TextBlock FontWeight="Bold" Text="" />
+                            <ui:TextBlock Text="{Binding GioiTinh}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <ui:TextBlock FontWeight="Bold" Text="Mã Nhân Viên" />
+                            <ui:TextBlock Text="{Binding NgaySinh}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1">
+                            <ui:TextBlock FontWeight="Bold" Text="" />
+                            <ui:TextBlock Text="{Binding Email}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="0">
+                            <ui:TextBlock FontWeight="Bold" Text="Mã Nhân Viên" />
+                            <ui:TextBlock Text="{Binding Sdt}" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="4"
+                            Grid.RowSpan="2"
+                            Grid.Column="0">
+                            <ui:TextBlock FontWeight="Bold" Text="Mã Nhân Viên" />
+                            <ui:ListView ItemsSource="{Binding IdDiaChiNavigation}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="models:ChiTietDiaChi">
+                                        <StackPanel>
+                                            <ui:TextBlock Margin="5,0,0,0" Text="{Binding MoTa}" />
+                                            <ui:TextBlock Margin="5,0,0,0" Text="{Binding IdXaPhuongNavigation.Ten}" />
+                                            <ui:TextBlock Margin="5,0,0,0" Text="{Binding IdHuyenQuanNavigation.Ten}" />
+                                            <ui:TextBlock Margin="5,0,0,0" Text="{Binding IdTinhTpNavigation.Ten}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ui:ListView>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                Text="{Binding CreateDate}" />
+                            <ui:TextBlock
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Text="{Binding LastModifiedDate}" />
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ui:ListView.ItemTemplate>
+        </ui:ListView>
+    </Grid>
+</UserControl>

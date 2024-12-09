@@ -1,6 +1,8 @@
 ﻿using BTLDotNET1.Models;
 using BTLDotNET1.Services;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
+using System.Windows.Automation;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -16,90 +18,72 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
         private readonly IGenericRepository<MauSac> _repositoryColor;
         private readonly ISnackbarService _snackBarService;
         private readonly INavigationService _navigationService;
+        private readonly ISessionService _sessionService;
 
         #region Observable Properties
-        [ObservableProperty]
-        private string ma = string.Empty;
 
-        [ObservableProperty]
-        private string idKh = string.Empty;
+        [ObservableProperty] private string ma = string.Empty;
 
-        [ObservableProperty]
-        private string idNv = string.Empty;
+        [ObservableProperty] private string idKh = string.Empty;
 
-        [ObservableProperty]
-        private DateOnly ngayTao = DateOnly.FromDateTime(DateTime.Now);
+        [ObservableProperty] private string idNv = string.Empty;
 
-        [ObservableProperty]
-        private DateOnly? ngayThanhToan;
+        [ObservableProperty] private DateOnly ngayTao = DateOnly.FromDateTime(DateTime.Now);
 
-        [ObservableProperty]
-        private decimal phanTramGiamGia = 0;
+        [ObservableProperty] private DateOnly? ngayThanhToan;
 
-        [ObservableProperty]
-        private decimal tienKhachDua = 0;
+        [ObservableProperty] private decimal phanTramGiamGia = 0;
 
-        [ObservableProperty]
-        private string hinhThucThanhToan = string.Empty;
+        [ObservableProperty] private decimal tienKhachDua = 0;
 
-        [ObservableProperty]
-        private string trangThai = "Đang Chờ";
+        [ObservableProperty] private string hinhThucThanhToan = string.Empty;
 
-        [ObservableProperty]
-        private ObservableCollection<KhachHang> customers = new();
+        [ObservableProperty] private string trangThai = "Đang Chờ";
+
+        [ObservableProperty] private ObservableCollection<KhachHang> customers = new();
 
 
-        [ObservableProperty]
-        private ObservableCollection<SanPham> products = new();
+        [ObservableProperty] private ObservableCollection<SanPham> products = new();
 
-        [ObservableProperty]
-        private ObservableCollection<ChiTietSanPham> productDetails = new();
+        [ObservableProperty] private ObservableCollection<ChiTietSanPham> productDetails = new();
 
-        [ObservableProperty]
-        private ObservableCollection<MauSac> colors = new();
+        [ObservableProperty] private ObservableCollection<MauSac> colors = new();
 
-        [ObservableProperty]
-        private ObservableCollection<HoaDonChiTiet> invoiceDetails = new();
+        [ObservableProperty] private ObservableCollection<HoaDonChiTiet> invoiceDetails = new();
 
-        [ObservableProperty]
-        private ObservableCollection<string> paymentMethods = ["Tiền mặt", "Ngân Hàng"];
+        [ObservableProperty] private int isHaveValue;
 
-        [ObservableProperty]
-        private KhachHang selectedCustomer;
+        [ObservableProperty] private ObservableCollection<string> paymentMethods = ["Tiền mặt", "Ngân Hàng"];
 
-        [ObservableProperty]
-        private string selectedPaymentMethod = "Tiền Mặt";
+        [ObservableProperty] private KhachHang selectedCustomer;
 
-        [ObservableProperty]
-        private decimal totalAmount = 0;
+        [ObservableProperty] private string selectedPaymentMethod = "Tiền Mặt";
 
-        [ObservableProperty]
-        private decimal discountAmount = 0;
+        [ObservableProperty] private decimal totalAmount = 0;
 
-        [ObservableProperty]
-        private decimal finalAmount = 0;
+        [ObservableProperty] private decimal discountAmount = 0;
 
-        [ObservableProperty]
-        private decimal changeDue = 0;
+        [ObservableProperty] private decimal finalAmount = 0;
 
-        [ObservableProperty]
-        private string searchProductText = string.Empty;
+        [ObservableProperty] private decimal changeDue = 0;
 
-        [ObservableProperty]
-        private MauSac selectedColor = new();
+        [ObservableProperty] private string searchProductText = string.Empty;
 
-        [ObservableProperty]
-        private string selectedRam = string.Empty;
+        [ObservableProperty] private MauSac selectedColor = new();
 
-        [ObservableProperty]
-        private string selectedStorage = string.Empty;
+        [ObservableProperty] private string selectedRam = string.Empty;
+
+        [ObservableProperty] private string selectedStorage = string.Empty;
+
+
+
         #endregion
 
         #region Unique ComboBox Items
-        [ObservableProperty]
-        private ObservableCollection<double?> uniqueRamItems = new();
-        [ObservableProperty]
-        private ObservableCollection<double?> uniqueStorageItems = new();
+
+        [ObservableProperty] private ObservableCollection<double?> uniqueRamItems = new();
+        [ObservableProperty] private ObservableCollection<double?> uniqueStorageItems = new();
+
         #endregion
 
 
@@ -107,11 +91,12 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
             IGenericRepository<HoaDon> repositoryInvoice,
             IGenericRepository<HoaDonChiTiet> repositoryInvoiceDetail,
             IGenericRepository<KhachHang> repositoryCustomer,
-             IGenericRepository<SanPham> repositoryProduct,
+            IGenericRepository<SanPham> repositoryProduct,
             IGenericRepository<ChiTietSanPham> repositoryProductDetail,
             IGenericRepository<MauSac> repositoryColor,
             ISnackbarService snackBarService,
-            INavigationService navigationService
+            INavigationService navigationService,
+            ISessionService sessionService
         )
         {
             _repositoryInvoice = repositoryInvoice;
@@ -122,12 +107,12 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
             _repositoryColor = repositoryColor;
             _snackBarService = snackBarService;
             _navigationService = navigationService;
+            _sessionService = sessionService;
             _ = LoadDataAsync();
         }
 
         partial void OnSearchProductTextChanged(string value)
         {
-
         }
 
         partial void OnTienKhachDuaChanging(decimal value)
@@ -139,7 +124,9 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
         {
             CalculateTotals();
         }
+
         #region Relay Commands
+
         [RelayCommand]
         private async Task LoadDataAsync()
         {
@@ -148,15 +135,17 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
             ProductDetails = new ObservableCollection<ChiTietSanPham>(await _repositoryProductDetail.GetAllAsync());
             Colors = new ObservableCollection<MauSac>(await _repositoryColor.GetAllAsync());
             UniqueRamItems = new ObservableCollection<double?>(
-          ProductDetails.Select(p => p.Ram).Distinct().ToList());
+                ProductDetails.Select(p => p.Ram).Distinct().ToList());
             UniqueStorageItems = new ObservableCollection<double?>(
                 ProductDetails.Select(p => p.BoNhoTrong).Distinct().ToList());
+
 
             foreach (var productDetail in ProductDetails)
             {
                 productDetail.IdSanPhamNavigation = Products.Where(p => p.Id == productDetail.IdSanPham).First();
                 productDetail.IdMauSacNavigation = Colors.Where(c => c.Id == productDetail.IdMauSac).First();
             }
+
             Ma = GenerateInvoiceNumber();
             IdNv = GetCurrentEmployeeId(); // Implement this method based on your authentication
         }
@@ -167,18 +156,18 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
             // Implement product selection dialog
             // Example: Open a dialog to select a product from ProductDetails collection
             // For demonstration, let's assume a product is selected and added
-            if (string.IsNullOrEmpty(SearchProductText) && SelectedRam == null && SelectedStorage == null && SelectedColor == null)
+            if (string.IsNullOrEmpty(SearchProductText) && SelectedRam == null && SelectedStorage == null &&
+                SelectedColor == null)
             {
                 OnOpenSnackBar("Thông tin", "Vui lòng nhập thông tin sản phẩm.", ControlAppearance.Info);
                 return;
             }
-            var selectedProduct = ProductDetails
 
-                 .Where(p => p.IdSanPhamNavigation.Ten.ToLower()== SearchProductText.ToLower())
-                 .Where(p => p.IdMauSac == SelectedColor.Id)
+            var selectedProduct = ProductDetails
+                .Where(p => p.IdSanPhamNavigation.Ten.ToLower() == SearchProductText.ToLower())
+                .Where(p => p.IdMauSac == SelectedColor.Id)
                 .Where(p => p.Ram.ToString() == SelectedRam)
                 .Where(p => p.BoNhoTrong.ToString() == SelectedStorage)
-
                 .FirstOrDefault();
             if (selectedProduct != null)
             {
@@ -186,6 +175,8 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
                 if (existingDetail != null)
                 {
                     existingDetail.SoLuong += 1;
+                    
+                    
                 }
                 else
                 {
@@ -198,6 +189,9 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
                         DonGia = selectedProduct.Gia ?? 0
                     });
                 }
+               
+                OnPropertyChanged(nameof(InvoiceDetails));
+                IsHaveValue = 1;
                 CalculateTotals();
             }
             else
@@ -213,6 +207,10 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
             {
                 InvoiceDetails.Remove(selectedDetail);
                 CalculateTotals();
+            }
+            if(InvoiceDetails.Count == 0)
+            {
+                IsHaveValue = 0;
             }
         }
 
@@ -277,13 +275,16 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
         [RelayCommand]
         private void CancelInvoice()
         {
+            IsHaveValue = 0;
             ClearData();
             OnOpenSnackBar("Đã hủy", "Việc tạo hóa đơn đã bị hủy.", ControlAppearance.Caution);
         }
+
         #endregion
 
         #region Private Methods
-        private string GenerateInvoiceNumber()
+
+        private static string GenerateInvoiceNumber()
         {
             // Implement logic to generate unique invoice number
             return $"HD-{DateTime.Now:yyyyMMddHHmmss}";
@@ -292,7 +293,9 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
         private string GetCurrentEmployeeId()
         {
             // Implement logic to retrieve the current logged-in employee's ID
-            return "NV0006"; // Placeholder
+
+            return _sessionService.GetSession()!.Id;
+            ; // Placeholder
         }
 
         private void CalculateTotals()
@@ -361,6 +364,7 @@ namespace BTLDotNET1.ViewModels.Pages.Sell
                 TimeSpan.FromSeconds(2)
             );
         }
+
         #endregion
     }
 }

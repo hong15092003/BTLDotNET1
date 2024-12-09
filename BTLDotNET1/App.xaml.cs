@@ -1,11 +1,13 @@
 ﻿using BTLDotNET1.Models;
 using BTLDotNET1.Services;
+using BTLDotNET1.ViewModels.Dialogs;
 using BTLDotNET1.ViewModels.Pages;
 using BTLDotNET1.ViewModels.Pages.Customer;
 using BTLDotNET1.ViewModels.Pages.Employee;
 using BTLDotNET1.ViewModels.Pages.Product;
 using BTLDotNET1.ViewModels.Pages.Sell;
 using BTLDotNET1.ViewModels.Windows;
+using BTLDotNET1.Views.Components.Dialog;
 using BTLDotNET1.Views.Pages;
 using BTLDotNET1.Views.Pages.Customer;
 using BTLDotNET1.Views.Pages.Employee;
@@ -42,6 +44,8 @@ namespace BTLDotNET1
                 // Đăng ký dịch vụ ApplicationHostService như một dịch vụ được host.
                 services.AddHostedService<ApplicationHostService>();
 
+                services.AddSingleton<IHostedService, ApplicationHostService>();
+
                 //
                 services.AddSingleton<IContentDialogService, ContentDialogService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
@@ -64,6 +68,9 @@ namespace BTLDotNET1
                 // Register generic repository
                 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+                // Đăng ký dịch vụ ISessionService để quản lý phiên làm việc của người dùng.
+                services.AddSingleton<ISessionService, SessionService>();
+
                 // Đăng ký cửa sổ chính của ứng dụng và cửa sổ đăng nhập.
                 services.AddSingleton<INavigationWindow, Login>();
                 services.AddSingleton<INavigationWindow, MainWindow>();
@@ -74,34 +81,57 @@ namespace BTLDotNET1
                 services.AddSingleton<LoginViewModel>();
 
                 // Đăng ký các trang và ViewModel tương ứng.
+                // Dashboard
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
+
+                // Data
                 services.AddSingleton<DataPage>();
                 services.AddSingleton<DataViewModel>();
+
+                // Settings
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+
+                // Product
                 services.AddSingleton<ProductPage>();
                 services.AddSingleton<ProductViewModel>();
                 services.AddSingleton<AddProductPage>();
                 services.AddSingleton<AddProductViewModel>();
                 services.AddSingleton<ProductDetailPage>();
                 services.AddSingleton<ProductDetailViewModel>();
+
+                // Brand
                 services.AddSingleton<BrandPage>();
                 services.AddSingleton<BrandViewModel>();
+
+                // Color
                 services.AddSingleton<ColorPage>();
                 services.AddSingleton<ColorViewModel>();
+
+                // Accessory
                 services.AddSingleton<AccessoryPage>();
                 services.AddSingleton<AccessoryViewModel>();
+
+                // Customer
                 services.AddSingleton<CustomerPage>();
                 services.AddSingleton<CustomerViewModel>();
                 services.AddSingleton<AddCustomerPage>();
                 services.AddSingleton<AddCustomerViewModel>();
+
+                // Employee
                 services.AddSingleton<EmployeePage>();
                 services.AddSingleton<EmployeeViewModel>();
                 services.AddSingleton<AddEmployeePage>();
                 services.AddSingleton<AddEmployeeViewModel>();
+                services.AddSingleton<EmployeeDialog>();
+                services.AddSingleton<EmployeeDialogViewModel>();
+
+                // Login
                 services.AddSingleton<LoginViewModel>();
                 services.AddSingleton<Login>();
+
+                // Sell
                 services.AddSingleton<SellPage>();
                 services.AddSingleton<SellViewModel>();
 

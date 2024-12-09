@@ -82,6 +82,8 @@
                     </Grid>
 
                     <!--  Product List  -->
+
+
                     <ui:ListView
                         Grid.Row="1"
                         Margin="5"
@@ -144,6 +146,35 @@
                             </DataTemplate>
                         </ui:ListView.ItemTemplate>
                     </ui:ListView>
+
+                    <!--  Message when InvoiceDetails is null or empty  -->
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="5"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Vertical">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding InvoiceDetails.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsHaveValue}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <ui:SymbolIcon FontSize="100" Symbol="Box24" />
+                        <ui:TextBlock
+                            Margin="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Text="Chưa có sản phẩm nào trong giỏ" />
+                    </StackPanel>
+
                 </Grid>
             </Border>
         </Grid>
@@ -157,7 +188,11 @@
             CornerRadius="10">
             <StackPanel Margin="15">
                 <!--  Customer Information  -->
-                <GroupBox Margin="0,0,0,10" Header="Thông Tin Khách Hàng">
+                <GroupBox
+                    Margin="0,0,0,10"
+                    BorderBrush="Gray"
+                    BorderThickness="0.5"
+                    Header="Thông Tin Khách Hàng">
                     <StackPanel>
                         <StackPanel Margin="0,5" Orientation="Horizontal">
                             <ui:TextBlock
@@ -184,7 +219,11 @@
                 </GroupBox>
 
                 <!--  Payment Information  -->
-                <GroupBox Margin="0,0,0,10" Header="Thông Tin Thanh Toán">
+                <GroupBox
+                    Margin="0,0,0,10"
+                    BorderBrush="Gray"
+                    BorderThickness="0.5"
+                    Header="Thông Tin Thanh Toán">
                     <StackPanel>
                         <StackPanel Margin="0,5" Orientation="Horizontal">
                             <ui:TextBlock
@@ -234,7 +273,11 @@
                 </GroupBox>
 
                 <!--  Totals and Actions  -->
-                <GroupBox Margin="0,0,0,10" Header="Tổng Cộng">
+                <GroupBox
+                    Margin="0,0,0,10"
+                    BorderBrush="Gray"
+                    BorderThickness="0.5"
+                    Header="Tổng Cộng">
                     <StackPanel>
                         <StackPanel Margin="0,5" Orientation="Horizontal">
                             <ui:TextBlock

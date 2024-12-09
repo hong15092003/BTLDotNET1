@@ -21,6 +21,7 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
         private readonly ISnackbarService _snackBarService;
 
         #region Observable Properties
+
         [ObservableProperty] private ObservableCollection<HuyenQuan> districtList = new();
         [ObservableProperty] private ObservableCollection<TinhTp> cityList = new();
         [ObservableProperty] private ObservableCollection<VaiTro> roleList = new();
@@ -41,6 +42,7 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
         [ObservableProperty] private TinhTp selectedCity = new();
         [ObservableProperty] private VaiTro selectedRole = new();
         [ObservableProperty] private XaPhuong selectedWard = new();
+
         #endregion
 
         public AddEmployeeViewModel(
@@ -66,6 +68,7 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
         }
 
         #region Partial Methods for Property Changes
+
         partial void OnSelectedCityChanged(TinhTp value)
         {
             FillDataToDistrict(value);
@@ -80,9 +83,11 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
         {
             _ = FillDataByCode(value);
         }
+
         #endregion
 
         #region Relay Commands
+
         [RelayCommand]
         private async Task LoadData()
         {
@@ -90,17 +95,18 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
             var cities = await _repositoryCity.GetAllAsync();
             var districts = new ObservableCollection<HuyenQuan>
             {
-                new HuyenQuan { Ten = "Vui lòng chọn Tỉnh Thành Phố" }
+                new() { Ten = "Vui lòng chọn Tỉnh Thành Phố" }
             };
             var wards = new ObservableCollection<XaPhuong>
             {
-                new XaPhuong { Ten = "Vui lòng chọn Quận Huyện" }
+                new() { Ten = "Vui lòng chọn Quận Huyện" }
             };
 
-            RoleList = new ObservableCollection<VaiTro>(roles);
-            CityList = new ObservableCollection<TinhTp>(cities);
-            DistrictList = new ObservableCollection<HuyenQuan>(districts);
-            WardList = new ObservableCollection<XaPhuong>(wards);
+            RoleList = [.. roles];
+            CityList = [.. cities];
+            DistrictList = [.. districts];
+            WardList = [.. wards];
+
         }
 
         [RelayCommand]
@@ -136,12 +142,13 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                         OnOpenSnackBar("Thông Báo", "Không thể thêm địa chỉ", ControlAppearance.Danger);
                         return;
                     }
+
                     employee.IdDiaChi = AddressId;
                     bool isAddEmployeeDone = await _repositoryEmployee.AddAsync(employee);
                     if (isAddEmployeeDone)
                     {
                         OnOpenSnackBar("Thông Báo", "Thêm nhân viên thành công", ControlAppearance.Success);
-                        ClearData();
+                        await ClearData();
                     }
                 }
                 else
@@ -150,12 +157,18 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                     bool updateAddress = await UpdateAddress();
                     if (updateAddress)
                     {
+                        employee.Id = Id;
                         employee.IdDiaChi = AddressId;
                         bool isUpdateEmployeeDone = await _repositoryEmployee.UpdateAsync(employee);
                         if (isUpdateEmployeeDone)
                         {
                             OnOpenSnackBar("Thông Báo", "Sửa nhân viên thành công", ControlAppearance.Success);
-                            ClearData();
+                            await ClearData();
+                        }
+                        else
+                        {
+                            OnOpenSnackBar("Thông Báo", "Sửa nhân viên thất bại", ControlAppearance.Danger);
+
                         }
                     }
                     else
@@ -189,30 +202,37 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
             SelectedWard = new XaPhuong();
             await LoadData();
         }
+
         #endregion
 
         #region Private Methods
+
         private async Task<string> AddAddress()
         {
-            var id = Guid.NewGuid().ToString();
-            var addressDetail = new ChiTietDiaChi
-            {
-                Id = id,
-                IdXaPhuong = SelectedWard.Id,
-                IdHuyenQuan = SelectedDistrict.Id,
-                IdTinhTp = SelectedCity.Id,
-                MoTa = AddressDescription,
-                CreateDate = DateOnly.FromDateTime(DateTime.Now),
-                LastModifiedDate = DateOnly.FromDateTime(DateTime.Now),
-                StatusDeleted = false
-            };
+
+            var addressDetail = CreateAddressDetail();
+            addressDetail.Id = Guid.NewGuid().ToString();
+            addressDetail.CreateDate = DateOnly.FromDateTime(DateTime.Now);
             bool isAddressDone = await _repositoryAddressDetail.AddAsync(addressDetail);
-            return isAddressDone ? id : string.Empty;
+            return isAddressDone ? addressDetail.Id : string.Empty;
         }
+
 
         private async Task<bool> UpdateAddress()
         {
-            var addressDetail = new ChiTietDiaChi
+            var addressDetail = CreateAddressDetail();
+            var oldAddressDetail = await GetOldAddressDetail();
+
+            if (oldAddressDetail == null) return false;
+
+            bool isValueHasChanged = CheckIfAddressChanged(oldAddressDetail, addressDetail);
+
+            return !isValueHasChanged || await _repositoryAddressDetail.AddAsync(addressDetail);
+        }
+
+        private ChiTietDiaChi CreateAddressDetail()
+        {
+            return new ChiTietDiaChi
             {
                 Id = AddressId,
                 IdXaPhuong = SelectedWard.Id,
@@ -222,22 +242,28 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                 LastModifiedDate = DateOnly.FromDateTime(DateTime.Now),
                 StatusDeleted = false
             };
-            var oldAddressDetail = await _repositoryAddressDetail.GetByIdAsync(AddressId);
-            if (oldAddressDetail == null) return false;
-
-            bool isValueHasChanged = oldAddressDetail.IdTinhTp != addressDetail.IdTinhTp ||
-                oldAddressDetail.IdHuyenQuan != addressDetail.IdHuyenQuan ||
-                oldAddressDetail.IdXaPhuong != addressDetail.IdXaPhuong ||
-                oldAddressDetail.MoTa != addressDetail.MoTa;
-
-            return !isValueHasChanged || await _repositoryAddressDetail.UpdateAsync(addressDetail);
         }
+
+        private async Task<ChiTietDiaChi?> GetOldAddressDetail()
+        {
+            return await _repositoryAddressDetail.GetByIdAsync(AddressId);
+        }
+
+        private bool CheckIfAddressChanged(ChiTietDiaChi oldAddressDetail, ChiTietDiaChi newAddressDetail)
+        {
+            return oldAddressDetail.IdTinhTp != newAddressDetail.IdTinhTp ||
+                   oldAddressDetail.IdHuyenQuan != newAddressDetail.IdHuyenQuan ||
+                   oldAddressDetail.IdXaPhuong != newAddressDetail.IdXaPhuong ||
+                   oldAddressDetail.MoTa != newAddressDetail.MoTa;
+        }
+
 
         private async Task<string> GetNumberOfEmployee()
         {
-            string roleCode = SelectedRole.Id == "0001" ? "QL" : "NV";
+            string roleCode = SelectedRole.Id.ToUpper();
             var employeeList = await _repositoryEmployee.GetByNameAsync(e => e.MaNv.StartsWith(roleCode));
-            string lastEmployeeCode = employeeList.OrderByDescending(e => e.MaNv).FirstOrDefault()?.MaNv ?? $"{roleCode}0000";
+            string lastEmployeeCode =
+                employeeList.OrderByDescending(e => e.MaNv).FirstOrDefault()?.MaNv ?? $"{roleCode}0000";
             string[] newEmployeeCode = lastEmployeeCode.Split(roleCode);
             int newCode = int.Parse(newEmployeeCode.Length > 1 ? newEmployeeCode[1] : "0000") + 1;
             return roleCode + newCode.ToString("D4");
@@ -249,8 +275,13 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
             var employee = await _repositoryEmployee.GetByCodeAsync(nv => nv.MaNv == employeeCode);
             if (employee != null)
             {
+                await ClearData();
+                var roleTask = _repositoryRole.GetByIdAsync(employee.IdVaiTro);
+                var addressDetailTask = _repositoryAddressDetail.GetByIdAsync(employee.IdDiaChi);
+                await Task.WhenAll(roleTask, addressDetailTask);
+
+                employee.IdVaiTroNavigation = roleTask.Result ?? new VaiTro();
                 Id = employee.Id;
-                var addressDetail = await _repositoryAddressDetail.GetByIdAsync(employee.IdDiaChi);
                 FullName = employee.HoTen;
                 Gender = employee.GioiTinh;
                 BirthDate = employee.NgaySinh;
@@ -258,11 +289,23 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                 Password = employee.MatKhau;
                 PhoneNumber = employee.Sdt;
                 AddressId = employee.IdDiaChi;
-                SelectedRole = await _repositoryRole.GetByIdAsync(employee.IdVaiTro) ?? new VaiTro();
-                SelectedWard = await _repositoryWard.GetByIdAsync(addressDetail!.IdXaPhuong) ?? new XaPhuong();
-                SelectedDistrict = await _repositoryDistrict.GetByIdAsync(addressDetail.IdHuyenQuan) ?? new HuyenQuan();
-                SelectedCity = await _repositoryCity.GetByIdAsync(addressDetail.IdTinhTp) ?? new TinhTp();
-                AddressDescription = addressDetail.MoTa;
+                SelectedRole = employee.IdVaiTroNavigation;
+
+                var addressDetail = addressDetailTask.Result;
+                if (addressDetail != null)
+                {
+                    var addressWardTask = await _repositoryWard.GetByIdAsync(addressDetail.IdXaPhuong);
+                    var addressDistrictTask = await _repositoryDistrict.GetByIdAsync(addressDetail.IdHuyenQuan);
+                    var addressCityTask = await _repositoryCity.GetByIdAsync(addressDetail.IdTinhTp);
+
+
+                    SelectedWard = addressWardTask ?? new XaPhuong();
+                    SelectedDistrict = addressDistrictTask ?? new HuyenQuan();
+                    SelectedCity = addressCityTask ?? new TinhTp();
+                    AddressDescription = addressDetail.MoTa;
+                }
+
+
             }
         }
 
@@ -270,20 +313,15 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
         {
             if (value?.Id == null) return;
             var districts = await _repositoryDistrict.GetByNameAsync(d => d.IdTinhTp == value.Id);
-            DistrictList = new ObservableCollection<HuyenQuan>(districts);
-            SelectedDistrict = new HuyenQuan { Ten = "Vui lòng chọn Quận/Huyện" };
-            WardList = new ObservableCollection<XaPhuong>
-            {
-                new XaPhuong { Ten = "Vui lòng chọn Xã/Phường" }
-            };
+            DistrictList = [.. districts];
+
         }
 
         private async void FillDataToWard(HuyenQuan value)
         {
             if (value?.Id == null) return;
             var wards = await _repositoryWard.GetByNameAsync(w => w.IdHuyenQuan == value.Id);
-            WardList = new ObservableCollection<XaPhuong>(wards);
-            SelectedWard = new XaPhuong { Ten = "Vui lòng chọn Xã/Phường" };
+            WardList = [.. wards];
         }
 
         private bool CheckValidateEmployee()
@@ -318,10 +356,11 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                 OnOpenSnackBar("Lỗi", ex.Message, ControlAppearance.Danger);
                 return false;
             }
+
             return true;
         }
 
-        private bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             try
             {
@@ -344,6 +383,7 @@ namespace BTLDotNET1.ViewModels.Pages.Employee
                 TimeSpan.FromSeconds(2)
             );
         }
+
         #endregion
     }
 }

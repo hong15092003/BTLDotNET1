@@ -12,10 +12,10 @@ namespace BTLDotNET1.Views.Windows
 
 
 
-        public Login(IPageService pageService, INavigationService navigationService)
+        public Login(IPageService pageService, INavigationService navigationService, LoginViewModel viewModel)
         {
-            ViewModel = new LoginViewModel();
-            DataContext = ViewModel;
+            ViewModel = viewModel;
+            DataContext = viewModel;
             SystemThemeWatcher.Watch(this);
 
             InitializeComponent();
@@ -23,8 +23,7 @@ namespace BTLDotNET1.Views.Windows
             Password.Icon = new SymbolIcon { Symbol = SymbolRegular.Password24 };
 
             // Gán các dịch vụ được truyền vào
-            ViewModel.PageService = pageService;
-            ViewModel.NavigationService = navigationService;
+
             ViewModel.LoginView = this;
 
         }
@@ -72,6 +71,11 @@ namespace BTLDotNET1.Views.Windows
         public void SetPageService(IPageService pageService)
         {
             throw new NotImplementedException();
+        }
+
+        private void Username_PreviewStylusSystemGesture(object sender, System.Windows.Input.StylusSystemGestureEventArgs e)
+        {
+
         }
     }
 }

@@ -89,8 +89,7 @@
             Grid.ColumnSpan="2"
             Margin="0,20,0,0"
             Padding="5"
-            BorderBrush="{x:Null}"
-            BorderThickness="1"
+            BorderThickness="0.5"
             Header="Màu sắc">
             <Grid x:Name="ProductColor" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
@@ -105,7 +104,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Width="200"
-                    DisplayMemberPath="Name"
+                    DisplayMemberPath="Ten"
                     ItemsSource="{Binding ColorList}"
                     SelectedItem="{Binding SelectedColor}" />
                 <ui:Button
@@ -153,8 +152,7 @@
             Grid.ColumnSpan="2"
             Margin="0,20,0,0"
             Padding="5"
-            BorderBrush="{x:Null}"
-            BorderThickness="1"
+            BorderThickness="0.5"
             Header="Bộ nhớ">
             <Grid x:Name="ProductMemory" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
@@ -250,8 +248,7 @@
             Grid.ColumnSpan="2"
             Margin="0,20,0,0"
             Padding="5"
-            BorderBrush="{x:Null}"
-            BorderThickness="1"
+            BorderThickness="0.5"
             Header="Giá">
             <Grid>
 
